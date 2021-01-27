@@ -1,0 +1,43 @@
+<body (window:resize)="checkDevice()">
+<app-menu (isSessionEvent)="getSessionData($event)"></app-menu>
+<div class="home">
+  <div class="add-link">
+    <input class="link-input" results="5" type="search" placeholder="URL of your favourite website" id="Search"
+     #url [disabled]="!isLoggedIn">
+    <button type="submit" class="btn btn-add" (click)="validateInput(url.value)" [disabled]="!isLoggedIn">Add</button>
+  </div>
+  <div class="warning" *ngIf="isLoggedIn === false">Please login/register to add links</div>
+  <div class="link-list">
+    <h3>Favourite sites:</h3>
+    <div>
+      <div class="link" *ngFor="let link of linklist" (click)="openLink()">
+        Linkname:{{link.name}}
+
+<!--        <a href class="btn-x" (click)="deleteLink(link.id)"></a>-->
+      </div>
+    </div>
+
+  </div>
+  <div class="button-container" *ngIf="linkCounter > 0">
+    <div class="navigation" *ngIf="linkCounter > 1 && !isMobileView">
+      <button class="btn btn-prev" (click)="prevPage()">previous</button>
+    </div>
+    <div class="close-page" *ngIf="linkCounter > 0">
+      <button class="btn btn-close" (click)="closePage(currentPage)">&times;</button>
+    </div>
+    <div class="navigation" *ngIf="linkCounter > 1 && !isMobileView">
+      <button class="btn btn-next"  (click)="nextPage()">next</button>
+    </div>
+  </div>
+  <div class="frames-container">
+<!--    <div class="placeholder" *ngIf="linkCounter === 0">-->
+<!--      Placeholder for iFrame-->
+<!--    </div>-->
+    <iframe class="frame" name="iframe_1" title="iframe_1" src="http://wiki.archlinux.org"></iframe>
+  </div>
+</div>
+</body>
+<!--<footer>All rights reserved © Thot-Soft 2002 Kft. 2021</footer>-->
+
+
+

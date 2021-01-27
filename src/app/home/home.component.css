@@ -1,0 +1,137 @@
+.home{
+  margin: 0px;
+  padding: 0px;
+  background-color: grey;
+}
+
+.btn-add{
+  margin-top: 0px;
+  border: 1px solid grey;
+  margin-left: 0px;
+  border-radius: 3px 3px 3px 3px;
+  font-size: 2em;
+  height: 2em;
+  background-color: #343434;
+}
+.btn-add:hover{
+  /*border-radius: 1em;*/
+  background-color: black;
+}
+
+
+.add-link{
+  display:flex;
+  color: aliceblue;
+  padding-top: 10px;
+  /*background-color: rgba(0,0,0,0);*/
+  width: 50%;
+  height: 4em;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.link-list{
+  margin-left: auto;
+  margin-right: auto;
+  /*margin-top: 1em;*/
+  /*margin-bottom: 1em;*/
+  width: 70%;
+  color: aliceblue;
+  min-height: 20em;
+  /*display: inline-flex;*/
+}
+.btn-x{
+  display: inline-block;
+  content: "\00d7";
+}
+
+.link-input{
+  background-color: #222222;
+  color: white;
+  width: 100%;
+  font-family: Arial;
+  font-size: 2em;
+  border: 1px solid grey;
+  border-radius: 3px 3px 3px 3px;
+}
+input:default{
+
+}
+input:focus{
+  background-color: black;
+  color: white;
+}
+
+
+.frames-container{
+  width: 100%;
+  /*margin-left: auto;*/
+}
+.frame{
+  border: 0px;
+  width: 100%;
+  margin: auto;
+  min-height: 100em;
+}
+
+.warning{
+  padding: 5px;
+  border: 0px solid black;
+  border-radius: 10px;
+  color: red;
+  background-color: #343434;
+  width: 20%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button-container{
+  margin-bottom: 1px;
+  height: 40px;
+  max-width: 22em;
+  background-color: #343434;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+  /*align-content: center;*/
+}
+.btn-prev{
+  margin-left: 1em;
+  margin-right: 1em;
+  width: 5em;
+  font-size: 1em;
+}
+
+.btn-next{
+  margin-left: 1em;
+  margin-right: 1em;
+  font-size: 1em;
+  width: 5em;
+}
+.btn-next:hover{
+  background-color: lightgray;
+  color: #343434;
+}
+.btn-prev:hover{
+  background-color: lightgray;
+  color: #343434;
+}
+.btn-close:hover{
+  background-color: lightgray;
+  color: #343434;
+}
+.btn-close{
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  font-size: 20px;
+  width: 6em;
+}
+
+.placeholder{
+  background-color: #d1d1d2;
+  width: 100%;
+  min-height: 30em;
+
+}

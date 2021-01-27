@@ -1,0 +1,65 @@
+<div class="header" id="header" role="heading">
+  <div class="title" (click)="reloadPage()">
+    MyHome
+  </div>
+
+  <div class="padding">
+  </div>
+
+  <div class="button-container">
+    <div class="login">
+      <button class="btn btn-login" *ngIf="isSession !== true" (click)="openLoginModal()">login</button>
+    </div>
+    <div class="register" *ngIf="isSession !== true">
+      <button class="btn btn-register"  (click)="openRegisterModal()">register</button>
+    </div>
+    <div class="user" *ngIf="isSession === true">
+      <label class="user">{{currentUser}}</label>
+    </div>
+    <div class="logout" *ngIf="isSession === true">
+      <button class="btn btn-logout" (click)="endSession()">logout</button>
+    </div>
+  </div>
+</div>
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeLoginModal()">&times;</span>
+    <div class="login-title">
+      Login
+    </div>
+    <ng-form>
+      <div class="input-container">
+          <input class="inputs" maxlength="40" name="Username" placeholder="user" type="text">
+        <br>
+          <input class="inputs" maxlength="40" name="Password" placeholder="password" type="password">
+        <br>
+      </div>
+      <div class="submit-container"><button class="btn btn-submit" type="submit" (click)="loginUser()">Sign in</button></div>
+    </ng-form>
+  </div>
+</div>
+<div id="registerModal" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeRegisterModal()">&times;</span>
+    <div class="register-title">
+      Register
+    </div>
+    <ng-form>
+      <br>
+      <div class="input-container">
+        <input class="inputs" maxlength="40" minlength="3" name="email" placeholder="email" required type="email">
+        <br>
+        <input class="inputs" maxlength="40" minlength="3" name="user" placeholder="user" required type="text">
+        <br>
+        <input class="inputs" maxlength="40" minlength="8" name="pass" placeholder="password" required type="password">
+        <br>
+        <input class="inputs" maxlength="40" minlength="8" name="pass2" placeholder="password again" required type="password">
+        <br>
+      </div>
+      <div class="submit-container"><button class="btn btn-submit" type="submit">Submit</button></div>
+    </ng-form>
+  </div>
+</div>
+
+
+
