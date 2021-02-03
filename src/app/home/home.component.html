@@ -6,12 +6,13 @@
      #url [disabled]="!isLoggedIn">
     <button type="submit" class="btn btn-add" (click)="validateInput(url.value)" [disabled]="!isLoggedIn">Add</button>
   </div>
-  <div class="warning" *ngIf="isLoggedIn === false">Please login/register to add links</div>
+  <div class="warning" *ngIf="isLoggedIn !== true">Please login/register to add links</div>
   <div class="link-list">
     <h3>Favourite sites:</h3>
     <div>
       <div class="link" *ngFor="let link of linklist" (click)="openLink()">
-        Linkname:{{link.name}}
+<!--        Link:{{link.name}}-->
+        {{link}}
 
 <!--        <a href class="btn-x" (click)="deleteLink(link.id)"></a>-->
       </div>

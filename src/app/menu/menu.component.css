@@ -14,29 +14,22 @@
   cursor: pointer;
   font-size: 2em;
   font-family: "Palatino Linotype";
-  width: 5em;
+  /*width: 1em;*/
   padding: 0px;
-  margin-left: 10%;
+  margin-left: 5%;
   color: aliceblue;
 }
-.login-title{
 
-  margin-bottom: 10px;
-  color: aliceblue;
-  font-size: 3em;
-  font-family: "Droid Sans";
-  width: 5em;
-  padding: 0px;
-  /*margin-left: 10%;*/
+.user{
+  font-family: "Palatino Linotype";
+  color: whitesmoke;
+  font-size: 25px;
+  height: auto;
+  margin-top: 8px;
+  margin-right: 1em;
+  font-weight: lighter;
 }
-.register-title{
-  color: aliceblue;
-  font-size: 3em;
-  font-family: "Droid Sans";
-  width: 5em;
-  padding: 0px;
-  /*margin-left: 10%;*/
-}
+
 
 .padding{
   width: 100%;
@@ -45,7 +38,7 @@
 .button-container{
   display: flex;
   flex-direction: row;
-  margin-right: 5em;
+  margin-right: 3em;
 }
 
 .btn-login{
@@ -65,31 +58,16 @@
   margin-left: auto;
   margin-right: auto;
 }
-.inputs{
-  display: block;
-  margin: 0 auto;
-  background-color: #232323;
-  color: lightgray;
-  padding-left: 1em;
-  padding-right: 1em;
-  border-radius: 2em;
-  border: 0px;
-  height: 2em;
-  font-size: 2em;
-  width: 90%;
-}
-.inputs:hover{
-  background-color: black;
-}
+
 .btn-submit{
-  margin-left: 0%;
-  width: 100%;
+  display: block;
+  margin: auto;
+  width: 55%;
   border-radius: 1em;
   height: 2em;
 }
 
 .submit-container{
-  /*font-size: 2em;*/
   margin-left: auto;
   margin-right: auto;
 }
@@ -100,41 +78,30 @@
 /*  color: aliceblue;*/
 /*}*/
 
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-.modal-content {
-  background-color: #575757;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  border-radius: 10px;
-  width: 50%;
-}
+
 
 /* The Close Button */
 .close {
   color: lightgrey;
   float: right;
-  font-size: 28px;
+  font-size: 2em;
+  margin-right: 1em;
   font-weight: bold;
 }
 
 .close:hover,
 .close:focus {
-  color: darkgrey;
+  color: white;
   text-decoration: none;
   cursor: pointer;
 }
 
 
+.checkbox-container{
+  margin: auto;
+  margin-top: 5px;
+  font-size: 20px;
+  color: whitesmoke;
+  display: block;
+  width: 50%;
+}

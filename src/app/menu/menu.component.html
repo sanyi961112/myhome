@@ -5,7 +5,6 @@
 
   <div class="padding">
   </div>
-
   <div class="button-container">
     <div class="login">
       <button class="btn btn-login" *ngIf="isSession !== true" (click)="openLoginModal()">login</button>
@@ -27,15 +26,33 @@
     <div class="login-title">
       Login
     </div>
-    <ng-form>
+    <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
       <div class="input-container">
-          <input class="inputs" maxlength="40" name="Username" placeholder="user" type="text">
+          <input class="inputs"
+                 id=username
+                 maxlength="40"
+                 formControlName="username"
+                 placeholder="username"
+                 type="text">
+        <div *ngIf="g.username.touched && g.username.invalid">
+          <div *ngIf="g.username.errors.required" class="warning">Add a valid username please</div>
+        </div>
         <br>
-          <input class="inputs" maxlength="40" name="Password" placeholder="password" type="password">
-        <br>
+          <input class="inputs"
+                 id="password"
+                 maxlength="40"
+                 formControlName="password"
+                 placeholder="password"
+                 type="password">
+        <div *ngIf="g.password.touched && g.password.invalid">
+          <div *ngIf="g.username.errors.required" class="warning">Add a valid password in order to log in</div>
+        </div>
       </div>
-      <div class="submit-container"><button class="btn btn-submit" type="submit" (click)="loginUser()">Sign in</button></div>
-    </ng-form>
+      <br>
+      <div class="submit-container">
+        <button class="btn btn-submit" type="submit">Sign in</button>
+      </div>
+    </form>
   </div>
 </div>
 <div id="registerModal" class="modal">
@@ -44,20 +61,67 @@
     <div class="register-title">
       Register
     </div>
-    <ng-form>
-      <br>
+
+    <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
       <div class="input-container">
-        <input class="inputs" maxlength="40" minlength="3" name="email" placeholder="email" required type="email">
+        <input id="email"
+               class="inputs"
+               maxlength="40"
+               formControlName="email"
+               name="email"
+               placeholder="e-mail"
+               type="email">
+        <div *ngIf="f.email.touched && f.email.invalid">
+          <div *ngIf="f.email.errors.required"  class="warning">Email is required!</div>
+          <div *ngIf="f.email.errors.email && f.email.value !== ''"  class="warning">Please, enter valid email address!</div>
+        </div>
         <br>
-        <input class="inputs" maxlength="40" minlength="3" name="user" placeholder="user" required type="text">
+        <input class="inputs"
+               maxlength="40"
+               id="user"
+               formControlName="user"
+               placeholder="username"
+               type="text">
+        <div *ngIf="f.user.touched && f.user.invalid">
+          <div *ngIf="f.user.errors.required" class="warning">Username is required!</div>
+          <div *ngIf="!f.user.errors.minLength && f.user.value !== ''" class="warning">
+            Username must be at least 3 characters!
+          </div>
+        </div>
         <br>
-        <input class="inputs" maxlength="40" minlength="8" name="pass" placeholder="password" required type="password">
+        <input class="inputs"
+               maxlength="40"
+               id="pass"
+               formControlName="pass"
+               placeholder="password"
+               type="password">
+        <div *ngIf="f.pass.touched && f.pass.invalid">
+          <div *ngIf="f.pass.errors.required" class="warning">Password is required!</div>
+          <div *ngIf="!f.pass.errors.minLength && f.pass.value !== ''" class="warning">
+            Password must be at least 8 characters!
+          </div>
+        </div>
         <br>
-        <input class="inputs" maxlength="40" minlength="8" name="pass2" placeholder="password again" required type="password">
+        <input class="inputs"
+               id="pass2"
+               maxlength="40"
+               formControlName="pass2"
+               placeholder="password confirm"
+               type="password">
+        <div *ngIf="checkPasswords() && f.pass2.value !== ''" class="warning">Passwords must match!</div>
+        <div *ngIf="f.pass2.touched && f.pass2.invalid">
+          <div *ngIf="f.pass2.errors.required" class="warning">Password confirm is required!</div>
+<!--          <div *ngIf="!f.pass2.errors.minLength" class="warning">Password confirm must be at least 8 characters!</div>-->
+        </div>
+        <div class="checkbox-container">
+          <label for="toggle">Show Passwords:</label><input id="toggle" type="checkbox" (click)="toggleVisible()">
+        </div>
         <br>
       </div>
-      <div class="submit-container"><button class="btn btn-submit" type="submit">Submit</button></div>
-    </ng-form>
+      <div class="submit-container">
+        <button class="btn btn-submit" type="submit" [disabled]="!registerForm.valid">Submit</button>
+      </div>
+    </form>
   </div>
 </div>
 

@@ -10,7 +10,7 @@ import {MenuComponent} from '../menu/menu.component';
 })
 export class HomeComponent implements OnInit {
   isOnline: boolean;
-  linklist: Array<Link>;
+  linklist: any;
   openedLinks = true;
   openedLinkList: Array<Link>;
   isLoggedIn: boolean;
@@ -19,14 +19,22 @@ export class HomeComponent implements OnInit {
   urlString: string;
   linkCounter: number;
   currentPage: number;
+  infoString: string;
 
 
   constructor() {
     this.checkDevice();
+    // this.linklist = JSON.parse(localStorage.getItem('linklist'));
   }
 
   ngOnInit(): void {
-    this.isLoggedIn = false;
+    if (localStorage.getItem('isLoggedIn') === null){
+      localStorage.setItem('isLoggedIn', 'false');
+      this.infoString = localStorage.getItem('isLoggedIn');
+    }
+
+    const sessionBool = Boolean(this.infoString);
+    this.isLoggedIn = sessionBool;
     this.linkCounter = 0;
   }
 
@@ -58,7 +66,7 @@ export class HomeComponent implements OnInit {
       alert('Add a valid url in the input field!');
       return false;
     }
-    alert('URL syntax is wrong!');
+    alert('URL syntax is wrong! \n e.g.: www.wikipedia.org');
     return false;
   }
 
