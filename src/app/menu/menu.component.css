@@ -24,8 +24,8 @@
   font-family: "Palatino Linotype";
   color: whitesmoke;
   font-size: 25px;
-  height: auto;
-  margin-top: 8px;
+  /*height: auto;*/
+  margin-top: 3px;
   margin-right: 1em;
   font-weight: lighter;
 }
@@ -78,7 +78,9 @@
 /*  color: aliceblue;*/
 /*}*/
 
-
+#toggle{
+  font-size: 2em;
+}
 
 /* The Close Button */
 .close {

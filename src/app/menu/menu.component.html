@@ -13,7 +13,7 @@
       <button class="btn btn-register"  (click)="openRegisterModal()">register</button>
     </div>
     <div class="user" *ngIf="isSession === true">
-      <label class="user">{{currentUser}}</label>
+      <h2 class="user">{{currentUser}}</h2>
     </div>
     <div class="logout" *ngIf="isSession === true">
       <button class="btn btn-logout" (click)="endSession()">logout</button>
@@ -45,7 +45,7 @@
                  placeholder="password"
                  type="password">
         <div *ngIf="g.password.touched && g.password.invalid">
-          <div *ngIf="g.username.errors.required" class="warning">Add a valid password in order to log in</div>
+          <div *ngIf="g.password.errors.required && g.password.value===''" class="warning">Add a valid user/password combination to log in</div>
         </div>
       </div>
       <br>
@@ -111,7 +111,6 @@
         <div *ngIf="checkPasswords() && f.pass2.value !== ''" class="warning">Passwords must match!</div>
         <div *ngIf="f.pass2.touched && f.pass2.invalid">
           <div *ngIf="f.pass2.errors.required" class="warning">Password confirm is required!</div>
-<!--          <div *ngIf="!f.pass2.errors.minLength" class="warning">Password confirm must be at least 8 characters!</div>-->
         </div>
         <div class="checkbox-container">
           <label for="toggle">Show Passwords:</label><input id="toggle" type="checkbox" (click)="toggleVisible()">

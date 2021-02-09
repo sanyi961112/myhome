@@ -90,7 +90,7 @@ input.ng-invalid.ng-touched{
   border: 1px solid red;
 }
 input.ng-valid{
-  border: 1px solid lawngreen;
+  border: 1px solid #343434;
 }
 /*.ng-valid[required], .ng-valid.required{*/
 /*  border: 1px solid green;*/
@@ -151,6 +151,7 @@ input.ng-valid{
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
 .modal-content{
   background-color: #575757;
   margin: auto;
@@ -160,6 +161,7 @@ input.ng-valid{
   width: 50%;
   height: auto;
 }
+
 .inputs{
   display: block;
   margin: 0 auto;
