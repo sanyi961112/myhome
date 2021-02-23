@@ -182,3 +182,11 @@ input.ng-valid{
   background-color: black;
 }
 
+.links{
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+}
+.links:hover{
+  color: black;
+}

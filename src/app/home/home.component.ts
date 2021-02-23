@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('isLoggedIn', 'false');
       this.infoString = localStorage.getItem('isLoggedIn');
     }
+    this.linklist = JSON.parse(localStorage.getItem('currentList'));
 
     const sessionBool = Boolean(this.infoString);
     this.isLoggedIn = sessionBool;

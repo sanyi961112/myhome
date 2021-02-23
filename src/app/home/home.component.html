@@ -10,9 +10,8 @@
   <div class="link-list">
     <h3>Favourite sites:</h3>
     <div>
-      <div class="link" *ngFor="let link of linklist" (click)="openLink()">
-<!--        Link:{{link.name}}-->
-        {{link}}
+      <div class="links" *ngFor="let link of linklist" (click)="openLink()">
+        <button>{{link}}</button>
 
 <!--        <a href class="btn-x" (click)="deleteLink(link.id)"></a>-->
       </div>
