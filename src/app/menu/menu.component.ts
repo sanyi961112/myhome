@@ -1,8 +1,6 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {sha256} from 'js-sha256';
-import {User} from '../models/User';
-import {stringify} from 'querystring';
 
 @Component({
   selector: 'app-menu',
@@ -59,6 +57,9 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (localStorage.getItem('currentList') === null){
+      localStorage.setItem('currentList', '[]');
+    }
     // get the current username if logged in, so won't lose it on refresh
     if (!(localStorage.getItem('currentUser'))) {
       localStorage.setItem('currentUser', '');
@@ -141,12 +142,6 @@ export class MenuComponent implements OnInit {
     this.registerModal.style.display = 'block';
   }
 
-  reloadPage(): void {
-    // this.sendSession(this.isSession);
-    // alert(this.users);
-    window.location.reload();
-  }
-
   closeLoginModal(): void {
     this.loginModal.style.display = 'none';
     this.resetLoginForm();
@@ -161,6 +156,12 @@ export class MenuComponent implements OnInit {
     this.resetRegisterForm();
   }
 
+  reloadPage(): void {
+    // this.sendSession(this.isSession);
+    // alert(this.users);
+    window.location.reload();
+  }
+
   resetRegisterForm(): void {
     (document.getElementById('toggle') as HTMLInputElement).checked = false;
     (document.getElementById('pass') as HTMLInputElement).setAttribute('type', 'password');
@@ -169,19 +170,24 @@ export class MenuComponent implements OnInit {
   }
 
   endSession(): void {
-    // no need to delete user, since we want the user to access the page in offline, just end the session
-    // is reload page needed? nope
+    // no need to delete user or links, since we want the user to access the pages in offline, just end the session
+    // TODO save the currentlist to the user's list, it's an overwrite
+    const list = JSON.parse(localStorage.getItem('currentList'));
+    let linkList = localStorage.getItem('linkList');
+
+
     if (localStorage.getItem('isLoggedIn') === 'true') {
       this.isSession = false;
       localStorage.setItem('isLoggedIn', 'false');
       this.sendSession(this.isSession);
       // this.reloadPage();
-      alert('User has been logged out');
+      // alert('User has been logged out');
     }
     // this.sendSession(this.isSession);
   }
 
   loginUser(): void {
+    // this.foundList = false;
     // localStorage.setItem('linkList', '[]');
     // TODO authenticate user from localstorage or if online then from server-db
     const username = this.loginForm.value.username;
@@ -203,28 +209,31 @@ export class MenuComponent implements OnInit {
           const checkedID = this.linkList[j].id;
           // alert(checkedID);
           if (checkedID.match(this.selectedID)){
-              alert(JSON.stringify(this.linkList[j].links));
+              // alert(JSON.stringify(this.linkList[j].links));
               this.currentList = this.linkList[j].links;
               localStorage.setItem('currentList', JSON.stringify(this.currentList));
+              // this.foundList = true;
               break;
           }
         }
-        if (this.foundList === null){
-          alert('You do not have any links yet');
-        }
+        // // if the user has no list yet, then create the next for them, id needed
+        // if (this.foundList !== true){
+        //   localStorage.setItem('currentList', '[]');
+        //   alert('You do not have any links yet');
+        //   // this.reloadPage();
+        // }
 
-        // alert(JSON.stringify(this.currentList));
         localStorage.setItem('currentList', JSON.stringify(this.currentList));
-        this.isSession = true;
         this.currentUser = username;
         localStorage.setItem('currentUser', this.currentUser);
+        this.isSession = true;
         this.sendSession(this.isSession);
         this.closeLoginModal();
-        this.closeRegisterModal();
-        return;
+        // this.closeRegisterModal();
+        location.reload();
       }
     }
-    alert('In order to login you need to register first');
+    alert('Wrong login/password combination');
   }
 
 

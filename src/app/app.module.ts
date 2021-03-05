@@ -8,15 +8,19 @@ import { RouterModule } from '@angular/router';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { SafePipe } from './safe.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    MenuComponent
+    MenuComponent,
+    SafePipe
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,

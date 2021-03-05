@@ -36,15 +36,12 @@
   margin-right: auto;
   /*margin-top: 1em;*/
   /*margin-bottom: 1em;*/
-  width: 70%;
+  width: 80%;
   color: aliceblue;
   min-height: 20em;
   /*display: inline-flex;*/
 }
-.btn-x{
-  display: inline-block;
-  content: "\00d7";
-}
+
 
 .link-input{
   background-color: #222222;
@@ -68,13 +65,6 @@ input:focus{
 .frames-container {
   width: 100%;
   /*margin-left: auto;*/
-}
-
-.frame{
-  border: 0px;
-  width: 100%;
-  margin: auto;
-  min-height: 100em;
 }
 
 
@@ -121,10 +111,12 @@ input:focus{
 }
 
 .btn-close{
-  /*margin-left: auto;*/
-  /*margin-right: auto;*/
   font-size: 20px;
   width: 6em;
+}
+.close-page{
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .placeholder{
@@ -132,4 +124,8 @@ input:focus{
   width: 100%;
   min-height: 30em;
 
+}
+.link-list{
+  margin-left:auto;
+  margin-right: auto;
 }

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Link} from '../models/Link';
 import {MenuComponent} from '../menu/menu.component';
-
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +9,6 @@ import {MenuComponent} from '../menu/menu.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  isOnline: boolean;
   linklist: any;
   openedLinks = true;
   openedLinkList: Array<Link>;
@@ -20,14 +19,24 @@ export class HomeComponent implements OnInit {
   linkCounter: number;
   currentPage: number;
   infoString: string;
+  foundLink: boolean;
+  usersList: any;
+  frameID: any;
+  urlExample: any;
+  iFrameUrl: SafeResourceUrl;
 
-
-  constructor() {
+  constructor(private sanitizer: DomSanitizer) {
     this.checkDevice();
     // this.linklist = JSON.parse(localStorage.getItem('linklist'));
   }
 
   ngOnInit(): void {
+    this.urlExample = 'http://wiki.archlinux.org';
+    this.frameID = 1000;
+    this.foundLink = false;
+    if (this.linkCounter === null || this.linkCounter < 0){
+      localStorage.setItem('linkCounter', '0');
+    }
     if (localStorage.getItem('isLoggedIn') === null){
       localStorage.setItem('isLoggedIn', 'false');
       this.infoString = localStorage.getItem('isLoggedIn');
@@ -36,15 +45,41 @@ export class HomeComponent implements OnInit {
 
     const sessionBool = Boolean(this.infoString);
     this.isLoggedIn = sessionBool;
-    this.linkCounter = 0;
+    this.linkCounter = Number(localStorage.getItem('linkCounter'));
   }
 
-  openLink(): void {
+  openLink(link: string): void {
+    let httplink;
+    if (link.includes('www.')){
+      link = link.replace('www.', '');
+    }
+    if (!(link.includes('http://' || 'https://'))){
+      httplink = 'http://' + link;
+      // alert(httplink);
+    }
+    // alert(link);
 
+    this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(link);
+    const iFrame = document.createElement('iframe');
+    iFrame.id = 'frame' + this.frameID;
+    iFrame.src = httplink;
+    iFrame.classList.add('frame');
+
+    document.getElementById('frames').appendChild(iFrame);
+    this.linkCounter++;
+    this.frameID++;
   }
 
-  deleteLink(id: number): void {
-
+  deleteLink(link: string): void {
+    if (this.isLoggedIn !== true){
+      return;
+    }
+    // alert('this will delete the link');
+    let list = JSON.parse(localStorage.getItem('currentList'));
+    // alert(list);
+    list = list.filter(obj => obj !== link);
+    localStorage.setItem('currentList', JSON.stringify(list));
+    // alert(list);
   }
 
   checkDevice(): boolean{
@@ -61,7 +96,8 @@ export class HomeComponent implements OnInit {
   validateInput(url): boolean {
     this.urlString = url.toString();
     if (this.urlString.match(this.urlRegex)){
-      alert('URL syntax accepted!');
+      // alert('URL syntax accepted!');
+      this.addLink(url);
       return true;
     } else if (this.urlString === ''){
       alert('Add a valid url in the input field!');
@@ -80,15 +116,36 @@ export class HomeComponent implements OnInit {
   }
 
   prevPage(): void {
-
+    // TODO
   }
 
   nextPage(): void {
-
+    // TODO
   }
 
   getSessionData($event): void{
     this.isLoggedIn = $event;
     localStorage.setItem('isLoggedIn', this.isLoggedIn.toString());
+  }
+
+  addLink(url): void {
+    // get current list of links, and push the new link if not exists already
+    this.linklist = JSON.parse(localStorage.getItem('currentList'));
+    for (let i = 0; i < this.linklist.length; i++){
+      if (this.linklist[i] === url){
+        alert('This link is already in the list');
+        this.foundLink = true;
+      }
+    }
+    if (this.foundLink !== true){
+      // add link to the list
+      this.linklist.push(url);
+      localStorage.setItem('currentList', JSON.stringify(this.linklist));
+      // // save it to the full list as well
+      // this.usersList = JSON.parse(localStorage.getItem('users'));
+      // for (let i = 0; i < this.usersList.length; i++){
+      //
+      // }
+    }
   }
 }

@@ -61,9 +61,47 @@ a:hover {
   border-color: rgba(0,0,0,0);
 }
 
+
+.frame{
+  border: 0px;
+  width: 100%;
+  margin: auto;
+  min-height: 100em;
+}
+
 iframe{
   overflow: hidden;
 }
+
+.btn-x{
+  background-color: rgba(0,0,0,0);
+  /*margin-left: 0px;*/
+  margin-right: 1em;
+  padding-top: 2px;
+  font-weight: bold;
+  /*width: 30px;*/
+  /*height: 30px;*/
+  color: #b00000 !important;
+  display: inline-flex;
+  font-size: 30px;
+  text-shadow: 1px 1px 1px black;
+  border: 0px solid rgba(0,0,0,0);
+}
+.btn-x:hover{
+  display: inline-block;
+  color: red !important;
+  text-shadow: 1px 1px 3px black;
+  /*background-color: black;*/
+  border: 0px solid rgba(0,0,0,0);
+  border-radius: 2em;
+}
+.btn-x:active{
+  color: red !important;
+}
+.btn-x:focus{
+  color: red !important;
+}
+
 
 /*input[type="search"]::-webkit-search-cancel-button {*/
 /*  -webkit-appearance: none;*/
@@ -126,13 +164,13 @@ input.ng-valid{
     flex-direction: column !important;
   }
   .link-input{
-    width: 95% !important;
+    width: 100% !important;
     margin: auto !important;
     font-size: 20px !important;
   }
   .btn-add{
     margin: auto !important;
-    width: 50% !important;
+    width: 100% !important;
     font-size: 1em !important;
 
   }
@@ -183,10 +221,23 @@ input.ng-valid{
 }
 
 .links{
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
   cursor: pointer;
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
+  height: auto;
 }
 .links:hover{
   color: black;
+}
+.btn-link{
+  width: 12em;
+  font-size: 1em;
+  margin-left: 0px;
+  margin-right: 0px;
+  background-color: #666666;
+}
+
+.link{
+  margin-right: 1em;
 }
