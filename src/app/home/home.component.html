@@ -2,9 +2,9 @@
 <app-menu (isSessionEvent)="getSessionData($event)"></app-menu>
 <div class="home">
   <div class="add-link">
-    <input class="link-input" results="5" type="search" placeholder="URL of your favourite website" id="Search"
+    <input class="link-input" results="5" placeholder="URL of your favourite website" id="Search"
      #url [disabled]="!isLoggedIn">
-    <button type="submit" class="btn btn-add" (click)="validateInput(url.value)" [disabled]="!isLoggedIn">Add</button>
+    <button class="btn btn-add" (click)="validateInput(url.value)" [disabled]="!isLoggedIn">Add</button>
   </div>
   <div class="warning" *ngIf="isLoggedIn !== true">Please login/register to add links</div>
   <div class="link-list">
@@ -36,11 +36,11 @@
 <!--    <div class="placeholder" *ngIf="linkCounter === 0">-->
 <!--      Placeholder for iFrame-->
 <!--    </div>-->
-    <iframe class="frame"
-            name="iframe_1"
-            id="placeholderFrame"
-            title="iframe_1"
-            [src]=urlExample></iframe>
+<!--    <iframe class="frame"-->
+<!--            name="iframe_1"-->
+<!--            id="placeholderFrame"-->
+<!--            title="iframe_1"-->
+<!--            [src]=urlExample></iframe>-->
 
   </div>
 </div>

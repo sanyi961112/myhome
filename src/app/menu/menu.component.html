@@ -29,6 +29,7 @@
     <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
       <div class="input-container">
           <input class="inputs"
+                 autocomplete="off"
                  id=username
                  maxlength="40"
                  formControlName="username"
@@ -62,7 +63,7 @@
       Register
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+    <form [formGroup]="registerForm" (ngSubmit)="registerUser()" autocomplete="off">
       <div class="input-container">
         <input id="email"
                class="inputs"

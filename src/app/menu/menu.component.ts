@@ -45,6 +45,7 @@ export class MenuComponent implements OnInit {
   foundList: boolean;
 
   constructor() {
+
   }
   // tslint:disable-next-line:typedef
   get f() {
@@ -57,18 +58,20 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('currentList') === null){
-      localStorage.setItem('currentList', '[]');
-    }
+    // if (this.isSession === false) {
+    //   this.sendSession(this.isSession);
+    //   localStorage.setItem('currentUser', 'none');
+    // }
+
     // get the current username if logged in, so won't lose it on refresh
-    if (!(localStorage.getItem('currentUser'))) {
+    if (this.isSession === false) {
       localStorage.setItem('currentUser', '');
     } else {
       this.currentUser = localStorage.getItem('currentUser');
     }
     // in case of offline mode get all data from localstorage
     if (navigator.onLine === false) {
-      this.getLocalData();
+      // this.getLocalData();
     }
     // TODO check if user is still logged in, insert jwt token as an extra measure 10 mins max
     if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -81,12 +84,6 @@ export class MenuComponent implements OnInit {
   }
 
   registerUser(): void {
-    // check if users exists
-    if (!(localStorage.getItem('users'))) {
-      // alert('users now exists');
-      localStorage.setItem('users', '[]');
-    }
-    // if users not exist, make it
     if (this.registerForm.invalid) {
       alert('invalid form');
       return;
@@ -121,9 +118,19 @@ export class MenuComponent implements OnInit {
         username: this.newUser,
         password: this.newPass
       };
+      const newUserLinks = {
+        id: this.newId,
+        links: []
+      };
       // add user
       this.users.push(this.userArray);
       localStorage.setItem('users', JSON.stringify(this.users));
+      // add user's id and empty linklist for usage
+      this.linkList = JSON.parse(localStorage.getItem('linkList'));
+      this.linkList.push(newUserLinks);
+      localStorage.setItem('linkList', JSON.stringify(this.linkList));
+
+
       if (navigator.onLine === true) {
         // TODO POST request to Server, update users db with new user
       }
@@ -169,30 +176,11 @@ export class MenuComponent implements OnInit {
     this.registerForm.reset({email: '', user: '', pass: '', pass2: ''});
   }
 
-  endSession(): void {
-    // no need to delete user or links, since we want the user to access the pages in offline, just end the session
-    // TODO save the currentlist to the user's list, it's an overwrite
-    const list = JSON.parse(localStorage.getItem('currentList'));
-    let linkList = localStorage.getItem('linkList');
-
-
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      this.isSession = false;
-      localStorage.setItem('isLoggedIn', 'false');
-      this.sendSession(this.isSession);
-      // this.reloadPage();
-      // alert('User has been logged out');
-    }
-    // this.sendSession(this.isSession);
-  }
-
   loginUser(): void {
-    // this.foundList = false;
-    // localStorage.setItem('linkList', '[]');
     // TODO authenticate user from localstorage or if online then from server-db
     const username = this.loginForm.value.username;
     const password = this.loginForm.value.password;
-    localStorage.setItem('currentList', '[]');
+    // localStorage.setItem('currentList', '[]');
 
     this.users = JSON.parse(localStorage.getItem('users'));
     if (this.users === null) {
@@ -205,23 +193,13 @@ export class MenuComponent implements OnInit {
         this.selectedID = (this.users[i].id);
         this.linkList = JSON.parse(localStorage.getItem('linkList'));
         for (let j = 0; j < this.linkList.length; j++){
-          // alert(this.linkList[j].id);
           const checkedID = this.linkList[j].id;
-          // alert(checkedID);
           if (checkedID.match(this.selectedID)){
-              // alert(JSON.stringify(this.linkList[j].links));
               this.currentList = this.linkList[j].links;
               localStorage.setItem('currentList', JSON.stringify(this.currentList));
-              // this.foundList = true;
               break;
           }
         }
-        // // if the user has no list yet, then create the next for them, id needed
-        // if (this.foundList !== true){
-        //   localStorage.setItem('currentList', '[]');
-        //   alert('You do not have any links yet');
-        //   // this.reloadPage();
-        // }
 
         localStorage.setItem('currentList', JSON.stringify(this.currentList));
         this.currentUser = username;
@@ -234,6 +212,54 @@ export class MenuComponent implements OnInit {
       }
     }
     alert('Wrong login/password combination');
+  }
+
+  endSession(): void {
+    // TODO save the currentlist to the user's list, it's an overwrite
+    this.saveCurrentList();
+
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      this.isSession = false;
+      localStorage.setItem('isLoggedIn', 'false');
+      localStorage.setItem('currentUser', 'none');
+      this.sendSession(this.isSession);
+    }
+  }
+
+  saveCurrentList(): void {
+    let userid;
+    let idFound = false;
+    const saveList = JSON.parse(localStorage.getItem('currentList'));
+    const linkList = JSON.parse(localStorage.getItem('linkList'));
+    // Get id of current user, get the right linklist id's list
+    const users = JSON.parse(localStorage.getItem('users'));
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < users.length; i++){
+      if (users[i].username === this.currentUser){
+        userid = users[i].id;
+        // alert('id:' + userid);
+        idFound = true;
+      }
+    }
+    if (idFound === false) {
+      const newUser = {
+        id: userid,
+        links: saveList
+      };
+      this.linkList.push(newUser);
+      localStorage.setItem('linkList', JSON.stringify(this.linkList));
+      return;
+    }
+
+    const updatableList = JSON.parse(localStorage.getItem('linkList'));
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < updatableList.length; i++){
+      if (updatableList[i].id === userid){
+        updatableList[i].links = saveList;
+        localStorage.setItem('linkList', JSON.stringify(updatableList));
+        return;
+      }
+    }
   }
 
 

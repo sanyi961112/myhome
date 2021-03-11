@@ -27,6 +27,17 @@ export class HomeComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer) {
     this.checkDevice();
+
+    if (localStorage.getItem('users') === null) {
+      // alert('users now exists');
+      localStorage.setItem('users', '[]');
+    }
+    if (localStorage.getItem('currentList') === null) {
+      localStorage.setItem('currentList', '[]');
+    }
+    if (localStorage.getItem('linkList') === null) {
+      localStorage.setItem('linkList', '[]');
+    }
     // this.linklist = JSON.parse(localStorage.getItem('linklist'));
   }
 
@@ -50,9 +61,9 @@ export class HomeComponent implements OnInit {
 
   openLink(link: string): void {
     let httplink;
-    if (link.includes('www.')){
-      link = link.replace('www.', '');
-    }
+    // if (link.includes('www.')){
+    //   link = link.replace('www.', '');
+    // }
     if (!(link.includes('http://' || 'https://'))){
       httplink = 'http://' + link;
       // alert(httplink);
@@ -93,18 +104,17 @@ export class HomeComponent implements OnInit {
     return this.isMobileView;
   }
 
-  validateInput(url): boolean {
+  validateInput(url): void {
     this.urlString = url.toString();
     if (this.urlString.match(this.urlRegex)){
-      // alert('URL syntax accepted!');
       this.addLink(url);
-      return true;
+      return;
     } else if (this.urlString === ''){
       alert('Add a valid url in the input field!');
-      return false;
+      return;
     }
-    alert('URL syntax is wrong! \n e.g.: www.wikipedia.org');
-    return false;
+    alert('Add a valid url in the input field!');
+    return;
   }
 
   closePage(location): void {
@@ -128,24 +138,25 @@ export class HomeComponent implements OnInit {
     localStorage.setItem('isLoggedIn', this.isLoggedIn.toString());
   }
 
+  // Addlink works fine now
   addLink(url): void {
-    // get current list of links, and push the new link if not exists already
+    this.foundLink = false;
+    // alert(url);
     this.linklist = JSON.parse(localStorage.getItem('currentList'));
     for (let i = 0; i < this.linklist.length; i++){
       if (this.linklist[i] === url){
         alert('This link is already in the list');
         this.foundLink = true;
+        // return;
+      } else {
+        this.foundLink = false;
+        // return;
       }
     }
     if (this.foundLink !== true){
-      // add link to the list
       this.linklist.push(url);
       localStorage.setItem('currentList', JSON.stringify(this.linklist));
-      // // save it to the full list as well
-      // this.usersList = JSON.parse(localStorage.getItem('users'));
-      // for (let i = 0; i < this.usersList.length; i++){
-      //
-      // }
     }
+
   }
 }
