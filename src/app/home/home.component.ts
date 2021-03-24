@@ -143,6 +143,7 @@ export class HomeComponent implements OnInit {
     this.foundLink = false;
     // alert(url);
     this.linklist = JSON.parse(localStorage.getItem('currentList'));
+    // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < this.linklist.length; i++){
       if (this.linklist[i] === url){
         alert('This link is already in the list');

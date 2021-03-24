@@ -192,7 +192,7 @@ export class MenuComponent implements OnInit {
         // find ID of the log in user, then select the user's link list
         this.selectedID = (this.users[i].id);
         this.linkList = JSON.parse(localStorage.getItem('linkList'));
-        for (let j = 0; j < this.linkList.length; j++){
+        for (let j = 0; j <= this.linkList.length; j++){
           const checkedID = this.linkList[j].id;
           if (checkedID.match(this.selectedID)){
               this.currentList = this.linkList[j].links;
