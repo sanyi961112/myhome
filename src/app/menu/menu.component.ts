@@ -180,42 +180,56 @@ export class MenuComponent implements OnInit {
     // TODO authenticate user from localstorage or if online then from server-db
     const username = this.loginForm.value.username;
     const password = this.loginForm.value.password;
-    // localStorage.setItem('currentList', '[]');
 
     this.users = JSON.parse(localStorage.getItem('users'));
     if (this.users === null) {
       localStorage.setItem('users', '[]');
       alert('In order to login you need to register first');
     }
+    let checkedID;
+    let foundID = 0;
+    // find user
     for (let i = 0; i <= this.users.length; i++) {
-      if (JSON.stringify(this.users).match(username) && JSON.stringify(this.users).match(this.hashPassword(password))) {
+      // tslint:disable-next-line:max-line-length
+      if (JSON.stringify(this.users[i].username).match(username) && JSON.stringify(this.users[i].password).match(this.hashPassword(password))) {
         // find ID of the log in user, then select the user's link list
         this.selectedID = (this.users[i].id);
+        // alert(this.selectedID);
         this.linkList = JSON.parse(localStorage.getItem('linkList'));
-        for (let j = 0; j <= this.linkList.length; j++){
-          const checkedID = this.linkList[j].id;
-          if (checkedID.match(this.selectedID)){
-              this.currentList = this.linkList[j].links;
-              localStorage.setItem('currentList', JSON.stringify(this.currentList));
-              break;
-          }
-        }
-
-        localStorage.setItem('currentList', JSON.stringify(this.currentList));
-        this.currentUser = username;
-        localStorage.setItem('currentUser', this.currentUser);
-        this.isSession = true;
-        this.sendSession(this.isSession);
-        this.closeLoginModal();
-        // this.closeRegisterModal();
-        location.reload();
+        // alert('found you in the system');
+        foundID = 1;
+        break;
       }
     }
-    alert('Wrong login/password combination');
+    // get the correct linklist
+    if (foundID === 1) {
+      // alert('i will get the linklist');
+      localStorage.setItem('currentList', '[]');
+      for (let j = 0; j <= this.linkList.length; j++) {
+        checkedID = this.linkList[j].id;
+        if (checkedID === this.selectedID){
+          // alert(checkedID);
+          // alert(this.selectedID);
+          this.currentList = this.linkList[j].links;
+          localStorage.setItem('currentList', JSON.stringify(this.currentList));
+          // localStorage.setItem('currentList', JSON.stringify(this.currentList));
+          this.currentUser = username;
+          localStorage.setItem('currentUser', this.currentUser);
+          this.isSession = true;
+          this.sendSession(this.isSession);
+          this.closeLoginModal();
+          // this.closeRegisterModal();
+          location.reload();
+          // alert('reloaded');
+          return;
+        }
+      }
+    } else{
+      alert('You are not in the system yet, please register');
+    }
   }
 
   endSession(): void {
-    // TODO save the currentlist to the user's list, it's an overwrite
     this.saveCurrentList();
 
     if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -264,6 +278,7 @@ export class MenuComponent implements OnInit {
 
 
   getLocalData(): void {
+    // TODO should be called on a refresh, so ngOnInit?
     // TODO offline session data gather, is access valid? is user token still active? load back opened pages last state
   }
 
@@ -299,7 +314,7 @@ export class MenuComponent implements OnInit {
   checkMailAndUser(mail, user): boolean {
     const data = localStorage.getItem('users');
     if (data.match('"' + mail + '"')) {
-      alert('The given e-mail is already registered');
+      alert('The given e-mail is already registered, please choose another one!');
       return true;
     }
     if (data.match('"' + user + '"')) {
