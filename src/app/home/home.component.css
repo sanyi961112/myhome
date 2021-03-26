@@ -70,7 +70,7 @@ input:focus{
 
 
 .button-container{
-  margin-bottom: 1px;
+  margin-bottom: 1em;
   height: 40px;
   max-width: 22em;
   background-color: #343434;
@@ -111,7 +111,7 @@ input:focus{
 }
 
 .btn-close{
-  font-size: 20px;
+  font-size: 1em;
   width: 6em;
 }
 .close-page{

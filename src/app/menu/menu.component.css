@@ -11,6 +11,8 @@
 }
 
 .title{
+  margin-top: auto;
+  margin-bottom: auto;
   cursor: pointer;
   font-size: 2em;
   font-family: "Palatino Linotype";

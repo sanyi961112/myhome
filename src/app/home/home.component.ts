@@ -11,13 +11,14 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 export class HomeComponent implements OnInit {
   linklist: any;
   openedLinks = true;
-  openedLinkList: Array<Link>;
+  openedLinkList: any;
   isLoggedIn: boolean;
   isMobileView = false;
   urlRegex = /^(?![^\n]*\.$)(?:https?:\/\/)?(?:(?:[2][1-4]\d|25[1-5]|1\d{2}|[1-9]\d|[1-9])(?:\.(?:[2][1-4]\d|25[1-5]|1\d{2}|[1-9]\d|[0-9])){3}(?::\d{4})?|[a-z\-]+(?:\.[a-z\-]+){2,})$/;
   urlString: string;
   linkCounter: number;
-  currentPage: number;
+  currentPage: any;
+  currentPageID: string;
   infoString: string;
   foundLink: boolean;
   usersList: any;
@@ -59,20 +60,20 @@ export class HomeComponent implements OnInit {
     this.linkCounter = Number(localStorage.getItem('linkCounter'));
   }
 
-  openLink(link: string): void {
+  openPage(link: string): void {
+    this.currentPage = link;
+    // alert(this.currentPage);
+    this.openedLinks = true;
     let httplink;
-    // if (link.includes('www.')){
-    //   link = link.replace('www.', '');
-    // }
     if (!(link.includes('http://' || 'https://'))){
       httplink = 'http://' + link;
-      // alert(httplink);
     }
-    // alert(link);
 
     this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(link);
     const iFrame = document.createElement('iframe');
     iFrame.id = 'frame' + this.frameID;
+    this.currentPageID = iFrame.id;
+    // alert(this.currentPageID);
     iFrame.src = httplink;
     iFrame.classList.add('frame');
 
@@ -113,20 +114,29 @@ export class HomeComponent implements OnInit {
       alert('Add a valid url in the input field!');
       return;
     }
-    alert('Add a valid url in the input field!');
+    alert('e.g: www.google.com');
     return;
   }
 
-  closePage(location): void {
-    if (this.openedLinks === true){
-      length = this.openedLinkList.length;
-
-      // TODO POST request needed to be sent to server, if online mode
+  closePage(currentPageID): void {
+    localStorage.getItem('currentPage');
+    // alert(currentPage + ' is going to be closed!');
+    // if (this.openedLinks === true){
+    //   length = this.openedLinkList.length;
+    //
+    // TODO POST request needed to be sent to server, if online mode?????
+    // }
+    // alert(this.currentPageID);
+    const iframe = document.getElementById(this.currentPageID);
+    iframe.parentNode.removeChild(iframe);
+    this.linkCounter = this.linkCounter - 1;
+    if (this.linkCounter === 0) {
+      location.reload();
     }
   }
 
   prevPage(): void {
-    // TODO
+    // TODO update the close-page button and actually add animation too
   }
 
   nextPage(): void {
@@ -143,19 +153,18 @@ export class HomeComponent implements OnInit {
     this.foundLink = false;
     // alert(url);
     this.linklist = JSON.parse(localStorage.getItem('currentList'));
+    // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < this.linklist.length; i++){
       if (this.linklist[i] === url){
         alert('This link is already in the list');
         this.foundLink = true;
-        // return;
-      } else {
-        this.foundLink = false;
         // return;
       }
     }
     if (this.foundLink !== true){
       this.linklist.push(url);
       localStorage.setItem('currentList', JSON.stringify(this.linklist));
+      (document.getElementById('Search') as HTMLInputElement).value = '';
     }
 
   }
