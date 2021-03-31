@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Link} from '../models/Link';
 import {MenuComponent} from '../menu/menu.component';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import { trigger, transition, query, style, animate, group } from '@angular/animations';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
     this.checkDevice();
 
     if (localStorage.getItem('users') === null) {
-      // alert('users now exists');
       localStorage.setItem('users', '[]');
     }
     if (localStorage.getItem('currentList') === null) {
@@ -39,7 +38,12 @@ export class HomeComponent implements OnInit {
     if (localStorage.getItem('linkList') === null) {
       localStorage.setItem('linkList', '[]');
     }
-    // this.linklist = JSON.parse(localStorage.getItem('linklist'));
+    if (localStorage.getItem('openedPages') === null){
+      localStorage.setItem('openedPages', '[]');
+    }
+    if (localStorage.getItem('currentActivePage') === null){
+      localStorage.setItem('currentActivePage', '');
+    }
   }
 
   ngOnInit(): void {
@@ -66,7 +70,7 @@ export class HomeComponent implements OnInit {
     this.openedLinks = true;
     let httplink;
     if (!(link.includes('http://' || 'https://'))){
-      httplink = 'http://' + link;
+      httplink = 'https://' + link;
     }
 
     this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(link);
@@ -79,7 +83,14 @@ export class HomeComponent implements OnInit {
 
     document.getElementById('frames').appendChild(iFrame);
     this.linkCounter++;
+    localStorage.setItem('linksOpened', JSON.stringify(this.linkCounter));
     this.frameID++;
+    const newOpening = {id: iFrame.id,
+      link: httplink};
+    const openedPages = JSON.parse(localStorage.getItem('openedPages'));
+    openedPages.push(newOpening);
+    localStorage.setItem('openedPages', JSON.stringify(openedPages));
+    localStorage.setItem('currentActivePage', iFrame.id);
   }
 
   deleteLink(link: string): void {
@@ -118,8 +129,9 @@ export class HomeComponent implements OnInit {
     return;
   }
 
-  closePage(currentPageID): void {
-    localStorage.getItem('currentPage');
+  closePage(): void {
+    const currentPage = localStorage.getItem('currentActivePage');
+    // alert();
     // alert(currentPage + ' is going to be closed!');
     // if (this.openedLinks === true){
     //   length = this.openedLinkList.length;
@@ -132,6 +144,8 @@ export class HomeComponent implements OnInit {
     this.linkCounter = this.linkCounter - 1;
     if (this.linkCounter === 0) {
       location.reload();
+    } else {
+      this.nextPage();
     }
   }
 
@@ -140,6 +154,26 @@ export class HomeComponent implements OnInit {
   }
 
   nextPage(): void {
+    let nextOne;
+    const currentActive = JSON.parse(localStorage.getItem('currentActivePage'));
+    if (this.linkCounter > 1) {
+      const openedPages = JSON.parse(localStorage.getItem('openedPages'));
+      for (let i = 0; i < openedPages.length; i++){
+        if (openedPages[i].id === currentActive) {
+          if (openedPages[i + 1].id !== null){
+            nextOne = openedPages[i + 1].id;
+            break;
+          } else {
+            nextOne = openedPages[0].id;
+          }
+        }
+      }
+      this.frameID = nextOne;
+      localStorage.setItem('currentActivePage', this.frameID);
+      alert(currentActive);
+      const iFrame = document.getElementById(currentActive);
+      iFrame.classList.add('frame-hidden');
+    }
     // TODO
   }
 

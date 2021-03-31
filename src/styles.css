@@ -68,6 +68,9 @@ a:hover {
   margin: auto;
   min-height: 100em;
 }
+.frame-hidden{
+  display: none !important;
+}
 
 iframe{
   overflow: hidden;
@@ -279,11 +282,14 @@ input.ng-valid{
   color: black;
 }
 .btn-link{
-  width: 12em;
+  width: 12rem;
   font-size: 1em;
   margin-left: 0px;
   margin-right: 0px;
   background-color: #666666;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .link{

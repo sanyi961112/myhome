@@ -35,10 +35,10 @@
   margin-left: auto;
   margin-right: auto;
   /*margin-top: 1em;*/
-  /*margin-bottom: 1em;*/
+  margin-bottom: 1em;
   width: 80%;
   color: aliceblue;
-  min-height: 20em;
+  min-height: 5em;
   /*display: inline-flex;*/
 }
 
@@ -70,6 +70,7 @@ input:focus{
 
 
 .button-container{
+  margin-top: 1em;
   margin-bottom: 1em;
   height: 40px;
   max-width: 22em;
@@ -125,7 +126,7 @@ input:focus{
   min-height: 30em;
 
 }
-.link-list{
-  margin-left:auto;
-  margin-right: auto;
-}
+/*.link-list{*/
+/*  margin-left:auto;*/
+/*  margin-right: auto;*/
+/*}*/
