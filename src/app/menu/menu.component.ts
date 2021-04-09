@@ -58,6 +58,7 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    localStorage.setItem('linksOpened', '0');
     // if (this.isSession === false) {
     //   this.sendSession(this.isSession);
     //   localStorage.setItem('currentUser', 'none');

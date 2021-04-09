@@ -1,12 +1,32 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MenuComponent} from '../menu/menu.component';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import { trigger, transition, query, style, animate, group } from '@angular/animations';
+import {trigger, transition, animate, style, state} from '@angular/animations';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('slideNext', [
+      state('true', style({transform: 'translateX(100%)', opacity: 0})),
+      state('false', style({transform: 'translateX(0)', opacity: 1})),
+      transition('0 => 1', animate('500ms', style({transform: 'translateX(0)', opacity: 1 }))),
+      transition('1 => 1', animate('500ms', style({transform: 'translateX(100%)', opacity: 1 }))),
+    ]),
+
+    trigger('slidePrev', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate('700ms ease-in', style({ transform: 'translateX(0%)', opacity: 1 }))
+      ]),
+
+      transition(':leave', [
+        style({ transform: 'translateX(0%)', opacity: 1 }),
+        animate('0ms ease-in', style({ transform: 'translateX(100%)', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class HomeComponent implements OnInit {
   linklist: any;
@@ -25,30 +45,42 @@ export class HomeComponent implements OnInit {
   frameID: any;
   urlExample: any;
   iFrameUrl: SafeResourceUrl;
+  prev: any;
+  current: any;
+  next: any;
+  nextFrame: any;
+  prevFrame: any;
+  prevLink: any;
+  nextLink: any;
 
   constructor(private sanitizer: DomSanitizer) {
     this.checkDevice();
 
-    if (localStorage.getItem('users') === null) {
+    if (localStorage.getItem('users') === null){
       localStorage.setItem('users', '[]');
     }
-    if (localStorage.getItem('currentList') === null) {
+    if (localStorage.getItem('currentList') === null){
       localStorage.setItem('currentList', '[]');
     }
-    if (localStorage.getItem('linkList') === null) {
+    if (localStorage.getItem('linkList') === null){
       localStorage.setItem('linkList', '[]');
     }
     if (localStorage.getItem('openedPages') === null){
       localStorage.setItem('openedPages', '[]');
     }
-    if (localStorage.getItem('currentActivePage') === null){
-      localStorage.setItem('currentActivePage', '');
+    if (localStorage.getItem('activePage') === null){
+      localStorage.setItem('activePage', '');
     }
   }
 
   ngOnInit(): void {
-    this.urlExample = 'http://wiki.archlinux.org';
-    this.frameID = 1000;
+    localStorage.setItem('openedPages', '[]');
+    this.frameID = 1001;
+    if (localStorage.getItem('nextFrameID') === null){
+      localStorage.setItem('nextFrameID', this.frameID);
+    } else{
+      this.frameID = localStorage.getItem('nextFrameID');
+    }
     this.foundLink = false;
     if (this.linkCounter === null || this.linkCounter < 0){
       localStorage.setItem('linkCounter', '0');
@@ -62,15 +94,33 @@ export class HomeComponent implements OnInit {
     const sessionBool = Boolean(this.infoString);
     this.isLoggedIn = sessionBool;
     this.linkCounter = Number(localStorage.getItem('linkCounter'));
+
+    // TODO check for openedPages and reopen them
+    this.reopenPages();
+  }
+
+  reopenPages(): void{
+    if (localStorage.getItem('openedPages') !== '[]' && localStorage.getItem('openedPages') !== null){
+      const openedPages = JSON.parse(localStorage.getItem('openedPages'));
+      localStorage.setItem('openedPages', '[]');
+      for (let i = 0; i < openedPages.length; i++) {
+        // alert(openedPages[i].link);
+        this.openPage(openedPages[i].link);
+      }
+    }
+    return;
   }
 
   openPage(link: string): void {
+    const openedList = JSON.parse(localStorage.getItem('openedPages'));
     this.currentPage = link;
-    // alert(this.currentPage);
     this.openedLinks = true;
     let httplink;
-    if (!(link.includes('http://' || 'https://'))){
+    // alert(link);
+    if ((link.includes('http://') === false && (link.includes('https://') === false))){
       httplink = 'https://' + link;
+    } else {
+      httplink = link;
     }
 
     this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(link);
@@ -85,24 +135,39 @@ export class HomeComponent implements OnInit {
     this.linkCounter++;
     localStorage.setItem('linksOpened', JSON.stringify(this.linkCounter));
     this.frameID++;
-    const newOpening = {id: iFrame.id,
+    localStorage.setItem('nextFrameID', this.frameID);
+    const newOpening = {
+      id: iFrame.id,
       link: httplink};
     const openedPages = JSON.parse(localStorage.getItem('openedPages'));
     openedPages.push(newOpening);
     localStorage.setItem('openedPages', JSON.stringify(openedPages));
-    localStorage.setItem('currentActivePage', iFrame.id);
+    localStorage.setItem('activePage', iFrame.id);
+
+    // hide previous frame
+    if (this.linkCounter > 0){
+      const currentActive = String(localStorage.getItem('activePage'));
+      // alert(currentActive);
+      const res = currentActive.replace('frame', '');
+      const resNum = Number(res);
+      const lastNum = resNum - 1;
+      if (document.getElementById('frame' + lastNum)){
+        const lastFrame = document.getElementById('frame' + lastNum);
+        // alert(lastFrame.id);
+        lastFrame.classList.add('frame-hidden');
+      }
+    }
+    return;
   }
 
   deleteLink(link: string): void {
     if (this.isLoggedIn !== true){
       return;
     }
-    // alert('this will delete the link');
     let list = JSON.parse(localStorage.getItem('currentList'));
-    // alert(list);
     list = list.filter(obj => obj !== link);
     localStorage.setItem('currentList', JSON.stringify(list));
-    // alert(list);
+    return;
   }
 
   checkDevice(): boolean{
@@ -130,62 +195,133 @@ export class HomeComponent implements OnInit {
   }
 
   closePage(): void {
-    const currentPage = localStorage.getItem('currentActivePage');
-    // alert();
-    // alert(currentPage + ' is going to be closed!');
-    // if (this.openedLinks === true){
-    //   length = this.openedLinkList.length;
-    //
+    // delete the openedPage array element on close
+    const currentPage = localStorage.getItem('activePage');
+    // alert(currentPage);
+    const openedList = JSON.parse(localStorage.getItem('openedPages'));
+    for (let i = 0; i < openedList.length; i++){
+      if (openedList[i].id === currentPage){
+          openedList.splice(i, 1);
+      }
+    }
+    localStorage.setItem('openedPages', JSON.stringify(openedList));
+
     // TODO POST request needed to be sent to server, if online mode?????
     // }
     // alert(this.currentPageID);
     const iframe = document.getElementById(this.currentPageID);
     iframe.parentNode.removeChild(iframe);
     this.linkCounter = this.linkCounter - 1;
+    localStorage.setItem('linksOpened', JSON.stringify(this.linkCounter));
     if (this.linkCounter === 0) {
       location.reload();
     } else {
-      this.nextPage();
+      this.setNewActivePage();
     }
+    return;
+  }
+
+  setNewActivePage(): void{
+    const openedPages = JSON.parse(localStorage.getItem('openedPages'));
+    // alert(openedPages);
+    let thisOne: string;
+    let thisLink: string;
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < openedPages.length; i++){
+      if (openedPages[i] != null){
+        thisOne = openedPages[i].id;
+        thisLink = openedPages[i].link;
+        break;
+      }
+    }
+    // alert(thisOne);
+    const newActive = document.getElementById(thisOne);
+    newActive.classList.add('frame-active');
+    localStorage.setItem('activePage', thisOne);
+    this.currentPage = thisLink;
+    this.currentPageID = thisOne;
   }
 
   prevPage(): void {
-    // TODO update the close-page button and actually add animation too
-  }
-
-  nextPage(): void {
-    let nextOne;
-    const currentActive = JSON.parse(localStorage.getItem('currentActivePage'));
-    if (this.linkCounter > 1) {
-      const openedPages = JSON.parse(localStorage.getItem('openedPages'));
-      for (let i = 0; i < openedPages.length; i++){
-        if (openedPages[i].id === currentActive) {
-          if (openedPages[i + 1].id !== null){
-            nextOne = openedPages[i + 1].id;
+    const currentFrame = localStorage.getItem('activePage');
+    const openedList = JSON.parse(localStorage.getItem('openedPages'));
+    // alert(JSON.stringify(openedList));
+    if (JSON.parse(localStorage.getItem('linksOpened')) > 1) {
+      for (let i = 0; i < openedList.length; i++) {
+        // alert(typeof(openedList[i + 1]));
+        if (openedList[i].id === currentFrame){
+          if (typeof(openedList[i - 1]) !== 'undefined'){
+            this.prevFrame = openedList[i - 1].id;
+            this.prevLink = openedList[i - 1].link;
             break;
           } else {
-            nextOne = openedPages[0].id;
+            this.prevFrame = openedList[openedList.length - 1].id;
+            this.prevLink = openedList[openedList.length - 1].link;
+            break;
           }
         }
       }
-      this.frameID = nextOne;
-      localStorage.setItem('currentActivePage', this.frameID);
-      alert(currentActive);
-      const iFrame = document.getElementById(currentActive);
-      iFrame.classList.add('frame-hidden');
+      // let's hide the current frame, show the new frame, set new active frame on localstorage, add the animations, return
+      this.current = document.getElementById(currentFrame);
+      this.prev = document.getElementById(this.prevFrame);
+      // TODO trigger animations here
+      this.current.classList.add('frame-hidden');
+      this.current.classList.remove('frame-active');
+      // TODO and here
+      this.prev.classList.remove('frame-hidden');
+      this.prev.classList.add('frame-active');
+      localStorage.setItem('activePage', this.prev.id);
+      this.currentPage = this.prevLink;
     }
-    // TODO
+    return;
+  }
+
+  nextPage(): void {
+    const currentFrame = localStorage.getItem('activePage');
+    const openedList = JSON.parse(localStorage.getItem('openedPages'));
+    if (JSON.parse(localStorage.getItem('linksOpened')) > 1) {
+      for (let i = 0; i < openedList.length; i++) {
+          // alert(typeof(openedList[i + 1]));
+          if (openedList[i].id === currentFrame){
+            if (typeof(openedList[i + 1]) !== 'undefined'){
+              this.nextFrame = openedList[i + 1].id;
+              this.nextLink = openedList[i + 1].link;
+              break;
+            } else {
+              this.nextFrame = openedList[0].id;
+              this.nextLink = openedList[0].link;
+              break;
+            }
+          }
+      }
+      // let's hide the current frame, show the new frame, set new active frame on localstorage, add the animations, return
+      this.current = document.getElementById(currentFrame);
+      this.next = document.getElementById(this.nextFrame);
+      // TODO trigger animations here
+      this.current.classList.remove('frame-active');
+      this.current.classList.add('frame-hidden');
+      // TODO and here
+      this.next.classList.add('frame-active');
+      this.next.classList.remove('frame-hidden');
+      localStorage.setItem('activePage', this.next.id);
+      this.currentPage = this.nextLink;
+    }
+    return;
+  }
+
+  updateClosePage(): void {
+    return;
   }
 
   getSessionData($event): void{
     this.isLoggedIn = $event;
     localStorage.setItem('isLoggedIn', this.isLoggedIn.toString());
+    return;
   }
 
   // Addlink works fine now
   addLink(url): void {
     this.foundLink = false;
-    // alert(url);
     this.linklist = JSON.parse(localStorage.getItem('currentList'));
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < this.linklist.length; i++){
@@ -200,6 +336,6 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('currentList', JSON.stringify(this.linklist));
       (document.getElementById('Search') as HTMLInputElement).value = '';
     }
-
+    return;
   }
 }

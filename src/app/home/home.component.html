@@ -7,8 +7,8 @@
     <button class="btn btn-add" (click)="validateInput(url.value)" [disabled]="!isLoggedIn">Add</button>
   </div>
   <div class="warning" *ngIf="isLoggedIn !== true">Please login/register to add links</div>
+  <h3>Favourite sites:</h3>
   <div class="link-list">
-    <h3>Favourite sites:</h3>
     <div>
       <div class="links" *ngFor="let link of linklist">
         <div class="link" title="open this page: {{link}}">
@@ -26,7 +26,7 @@
       <button class="btn btn-prev" title="step to previous page" (click)="prevPage()">&lt;</button>
     </div>
     <div class="close-page" *ngIf="linkCounter > 0">
-      <button class="btn btn-close" title="Close the current page: {{currentPage}}" (click)="closePage(currentPageID)">&times;</button>
+      <button class="btn btn-close" title="Close the current page: {{currentPage}}" (click)="closePage()">&times;</button>
     </div>
     <div class="navigation" *ngIf="linkCounter > 1 && !isMobileView">
       <button class="btn btn-next" title="step to next page"  (click)="nextPage()">&gt;</button>
@@ -44,8 +44,9 @@
 
   </div>
 </div>
-</body>
 <!--<footer>All rights reserved © Thot-Soft 2002 Kft. 2021</footer>-->
+</body>
+
 
 
 
