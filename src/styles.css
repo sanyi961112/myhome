@@ -65,24 +65,6 @@ a:hover {
   border-color: rgba(0,0,0,0);
 }
 
-
-.frame{
-  border: 0px;
-  width: 100%;
-  margin: auto;
-  min-height: 860px;
-}
-.frame-hidden{
-  display: none !important;
-}
-.frame-active{
-  display: block !important;
-}
-
-iframe{
-  overflow: hidden;
-}
-
 .btn-x{
   background-color: rgba(0,0,0,0);
   /*margin-left: 0px;*/
@@ -310,15 +292,97 @@ input.ng-valid{
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #454545;
+  background: #121212;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #555;
+  background: #666666;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #333;
+  background: #555555;
 }
+
+
+.frame{
+  border: 0px;
+  width: 100%;
+  margin: auto;
+  min-height: 860px;
+  display: block;
+}
+
+.frame-hidden{
+  display: none !important;
+}
+
+/*.frame-active{*/
+/*  display: block !important;*/
+/*}*/
+
+iframe{
+  overflow: hidden;
+}
+
+.next-page{
+  animation: slide1 500ms ease-in-out;
+}
+@keyframes slide1 {
+  0%{
+    opacity: 50%;
+    transform: translateX(50%);
+
+  }
+  100%{
+    opacity: 100%;
+    transform: translateX(0px);
+  }
+}
+
+.prev-page{
+  animation: slide2 500ms ease-in-out;
+}
+
+@keyframes slide2 {
+  0%{
+    opacity: 50%;
+    transform: translateX(-50%);
+
+  }
+  100%{
+    opacity: 100%;
+    transform: translateX(0px);
+  }
+}
+
+.frame-left{
+  animation: slide3 500ms ease-in-out;
+}
+
+/*@keyframes slide3 {*/
+/*  0%{*/
+/*    transform: translateX(0px);*/
+
+/*  }*/
+/*  100%{*/
+/*    transform: translateX(-100%);*/
+/*    !*display: none;*!*/
+/*  }*/
+/*}*/
+
+.frame-right{
+  animation: slide4 500ms ease-out;
+}
+/*@keyframes slide4 {*/
+/*  0%{*/
+/*    transform: translateX(0px);*/
+
+/*  }*/
+/*  100%{*/
+/*    transform: translateX(100%);*/
+/*    display: none;*/
+/*  }*/
+/*}*/
+

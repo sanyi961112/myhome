@@ -6,32 +6,12 @@ import {trigger, transition, animate, style, state} from '@angular/animations';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
-  animations: [
-    trigger('slideNext', [
-      state('true', style({transform: 'translateX(100%)', opacity: 0})),
-      state('false', style({transform: 'translateX(0)', opacity: 1})),
-      transition('0 => 1', animate('500ms', style({transform: 'translateX(0)', opacity: 1 }))),
-      transition('1 => 1', animate('500ms', style({transform: 'translateX(100%)', opacity: 1 }))),
-    ]),
-
-    trigger('slidePrev', [
-      transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 0 }),
-        animate('700ms ease-in', style({ transform: 'translateX(0%)', opacity: 1 }))
-      ]),
-
-      transition(':leave', [
-        style({ transform: 'translateX(0%)', opacity: 1 }),
-        animate('0ms ease-in', style({ transform: 'translateX(100%)', opacity: 0 }))
-      ])
-    ])
-  ]
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   linklist: any;
-  openedLinks = true;
   openedLinkList: any;
+  openedLinks = true;
   isLoggedIn: boolean;
   isMobileView = false;
   urlRegex = /^(?![^\n]*\.$)(?:https?:\/\/)?(?:(?:[2][1-4]\d|25[1-5]|1\d{2}|[1-9]\d|[1-9])(?:\.(?:[2][1-4]\d|25[1-5]|1\d{2}|[1-9]\d|[0-9])){3}(?::\d{4})?|[a-z\-]+(?:\.[a-z\-]+){2,})$/;
@@ -50,8 +30,9 @@ export class HomeComponent implements OnInit {
   next: any;
   nextFrame: any;
   prevFrame: any;
-  prevLink: any;
   nextLink: any;
+  prevLink: any;
+  exp: any;
 
   constructor(private sanitizer: DomSanitizer) {
     this.checkDevice();
@@ -112,11 +93,17 @@ export class HomeComponent implements OnInit {
   }
 
   openPage(link: string): void {
+    const openedP = JSON.parse(localStorage.getItem('openedPages'));
+    for (let i = 0; i < openedP.length; i++){
+      const currentID = openedP[i].id;
+      const currentIterationFrame = document.getElementById(currentID);
+      currentIterationFrame.classList.add('frame-hidden');
+    }
+
     const openedList = JSON.parse(localStorage.getItem('openedPages'));
     this.currentPage = link;
     this.openedLinks = true;
     let httplink;
-    // alert(link);
     if ((link.includes('http://') === false && (link.includes('https://') === false))){
       httplink = 'https://' + link;
     } else {
@@ -127,7 +114,6 @@ export class HomeComponent implements OnInit {
     const iFrame = document.createElement('iframe');
     iFrame.id = 'frame' + this.frameID;
     this.currentPageID = iFrame.id;
-    // alert(this.currentPageID);
     iFrame.src = httplink;
     iFrame.classList.add('frame');
 
@@ -143,11 +129,9 @@ export class HomeComponent implements OnInit {
     openedPages.push(newOpening);
     localStorage.setItem('openedPages', JSON.stringify(openedPages));
     localStorage.setItem('activePage', iFrame.id);
-
     // hide previous frame
     if (this.linkCounter > 0){
       const currentActive = String(localStorage.getItem('activePage'));
-      // alert(currentActive);
       const res = currentActive.replace('frame', '');
       const resNum = Number(res);
       const lastNum = resNum - 1;
@@ -195,54 +179,63 @@ export class HomeComponent implements OnInit {
   }
 
   closePage(): void {
-    // delete the openedPage array element on close
-    const currentPage = localStorage.getItem('activePage');
-    // alert(currentPage);
+    const currentId = localStorage.getItem('activePage');
     const openedList = JSON.parse(localStorage.getItem('openedPages'));
+
     for (let i = 0; i < openedList.length; i++){
-      if (openedList[i].id === currentPage){
-          openedList.splice(i, 1);
+      if (openedList[i].id === currentId){
+        // alert(JSON.stringify(openedList));
+        openedList.splice(i, 1);
       }
     }
-    localStorage.setItem('openedPages', JSON.stringify(openedList));
-
     // TODO POST request needed to be sent to server, if online mode?????
-    // }
-    // alert(this.currentPageID);
-    const iframe = document.getElementById(this.currentPageID);
+
+    const iframe = document.getElementById(currentId);
     iframe.parentNode.removeChild(iframe);
     this.linkCounter = this.linkCounter - 1;
     localStorage.setItem('linksOpened', JSON.stringify(this.linkCounter));
-    if (this.linkCounter === 0) {
-      location.reload();
-    } else {
+    localStorage.setItem('openedPages', JSON.stringify(openedList));
+    //
+    if (this.linkCounter >= 1 && typeof(this.linkCounter) !== 'undefined') {
       this.setNewActivePage();
     }
     return;
   }
 
   setNewActivePage(): void{
+    localStorage.setItem('activePage', 'none');
     const openedPages = JSON.parse(localStorage.getItem('openedPages'));
-    // alert(openedPages);
-    let thisOne: string;
-    let thisLink: string;
+    // hide all pages
+    for (let i = 0; i < openedPages.length; i++){
+      const hideThis = document.getElementById(openedPages[i].id);
+      hideThis.classList.add('frame-hidden');
+    }
+    let newId;
+
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < openedPages.length; i++){
-      if (openedPages[i] != null){
-        thisOne = openedPages[i].id;
-        thisLink = openedPages[i].link;
+      if (openedPages !== null && typeof(openedPages[i]) !== 'undefined'){
+        newId = openedPages[i].id;
         break;
+      } else {
+        alert('error');
+        return;
       }
     }
-    // alert(thisOne);
-    const newActive = document.getElementById(thisOne);
-    newActive.classList.add('frame-active');
-    localStorage.setItem('activePage', thisOne);
-    this.currentPage = thisLink;
-    this.currentPageID = thisOne;
+
+    const selected = document.getElementById(newId);
+    localStorage.setItem('activePage', newId);
+    this.currentPageID = newId;
+    selected.classList.remove('frame-hidden');
+    return;
   }
 
   prevPage(): void {
+    if (typeof (this.current) !== 'undefined'){
+      this.current.classList.remove('next-page');
+      this.current.classList.remove('prev-page');
+      this.current.classList.remove('frame-left');
+    }
     const currentFrame = localStorage.getItem('activePage');
     const openedList = JSON.parse(localStorage.getItem('openedPages'));
     // alert(JSON.stringify(openedList));
@@ -264,12 +257,10 @@ export class HomeComponent implements OnInit {
       // let's hide the current frame, show the new frame, set new active frame on localstorage, add the animations, return
       this.current = document.getElementById(currentFrame);
       this.prev = document.getElementById(this.prevFrame);
-      // TODO trigger animations here
+
       this.current.classList.add('frame-hidden');
-      this.current.classList.remove('frame-active');
-      // TODO and here
       this.prev.classList.remove('frame-hidden');
-      this.prev.classList.add('frame-active');
+      this.prev.classList.add('prev-page');
       localStorage.setItem('activePage', this.prev.id);
       this.currentPage = this.prevLink;
     }
@@ -277,11 +268,14 @@ export class HomeComponent implements OnInit {
   }
 
   nextPage(): void {
+    if (typeof(this.current) !== 'undefined'){
+      this.current.classList.remove('prev-page');
+      this.current.classList.remove('next-page');
+    }
     const currentFrame = localStorage.getItem('activePage');
     const openedList = JSON.parse(localStorage.getItem('openedPages'));
     if (JSON.parse(localStorage.getItem('linksOpened')) > 1) {
       for (let i = 0; i < openedList.length; i++) {
-          // alert(typeof(openedList[i + 1]));
           if (openedList[i].id === currentFrame){
             if (typeof(openedList[i + 1]) !== 'undefined'){
               this.nextFrame = openedList[i + 1].id;
@@ -294,24 +288,24 @@ export class HomeComponent implements OnInit {
             }
           }
       }
-      // let's hide the current frame, show the new frame, set new active frame on localstorage, add the animations, return
+      // let's slide-out the current frame, show the new frame, set new active frame on localstorage, add the animations, return
       this.current = document.getElementById(currentFrame);
       this.next = document.getElementById(this.nextFrame);
-      // TODO trigger animations here
-      this.current.classList.remove('frame-active');
-      this.current.classList.add('frame-hidden');
-      // TODO and here
-      this.next.classList.add('frame-active');
+
       this.next.classList.remove('frame-hidden');
+      this.next.classList.add('next-page');
+
+      this.current.classList.add('frame-hidden');
+
       localStorage.setItem('activePage', this.next.id);
       this.currentPage = this.nextLink;
     }
     return;
   }
-
-  updateClosePage(): void {
-    return;
-  }
+  // tslint:disable-next-line:typedef
+   delay(ms: number){
+      return new Promise(resolve => setTimeout(resolve, ms));
+   }
 
   getSessionData($event): void{
     this.isLoggedIn = $event;
@@ -328,7 +322,6 @@ export class HomeComponent implements OnInit {
       if (this.linklist[i] === url){
         alert('This link is already in the list');
         this.foundLink = true;
-        // return;
       }
     }
     if (this.foundLink !== true){
@@ -338,4 +331,6 @@ export class HomeComponent implements OnInit {
     }
     return;
   }
+
+
 }
