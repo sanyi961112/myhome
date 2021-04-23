@@ -1,0 +1,131 @@
+.home{
+  margin: 0px;
+  padding: 0px;
+  background-color: grey;
+}
+
+.btn-add{
+  margin-top: 0px;
+  border: 1px solid grey;
+  margin-left: 0px;
+  border-radius: 3px 3px 3px 3px;
+  font-size: 2em;
+  height: 2em;
+  background-color: #343434;
+}
+.btn-add:hover{
+  /*border-radius: 1em;*/
+  background-color: black;
+}
+
+.add-link{
+  display:flex;
+  color: aliceblue;
+  padding-top: 10px;
+  /*background-color: rgba(0,0,0,0);*/
+  width: 50%;
+  height: 4em;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.link-list{
+  text-align: center;
+  margin: auto;
+  /*justify-content: center;*/
+  /*margin-left: 5em;*/
+  /*margin-right: 10em;*/
+  /*margin-top: 1em;*/
+  padding-bottom: 1em;
+  width: 90%;
+  color: aliceblue;
+  min-height: 3em;
+  /*display: inline-flex;*/
+}
+
+.link-input{
+  background-color: #222222;
+  color: white;
+  width: 100%;
+  font-family: Arial;
+  font-size: 2em;
+  border: 1px solid grey;
+  border-radius: 3px 3px 3px 3px;
+}
+
+input:default{
+
+}
+input:focus{
+  background-color: black;
+  color: white;
+}
+
+.frames-container {
+  width: 100%;
+  /*margin-left: auto;*/
+}
+
+.button-container{
+  margin-top: 1em;
+  margin-bottom: 1em;
+  height: 40px;
+  max-width: 22em;
+  background-color: #343434;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+/*align-content: center;*/
+}
+
+.btn-prev{
+  margin-left: 1em;
+  margin-right: 1em;
+  width: 5em;
+  font-size: 1em;
+}
+
+.btn-next{
+  margin-left: 1em;
+  margin-right: 1em;
+  font-size: 1em;
+  width: 5em;
+}
+
+.btn-next:hover{
+  background-color: lightgray;
+  color: #343434;
+}
+
+.btn-prev:hover{
+  background-color: lightgray;
+  color: #343434;
+}
+
+.btn-close:hover{
+  background-color: lightgray;
+  color: #343434;
+}
+
+.btn-close{
+  font-size: 1em;
+  width: 6em;
+}
+.close-page{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.placeholder{
+  background-color: #d1d1d2;
+  width: 100%;
+  min-height: 30em;
+
+}
+
+/*.link-list{*/
+/*  margin-left:auto;*/
+/*  margin-right: auto;*/
+/*}*/

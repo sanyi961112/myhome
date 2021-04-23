@@ -1,0 +1,25 @@
+{
+  "name": "myhome-server",
+  "version": "1.0.0",
+  "description": "MyHome's server",
+  "main": "server.js",
+  "dependencies": {
+    "@types/node": "^14.14.41",
+    "express": "^4.17.1",
+    "good-env": "^5.2.0",
+    "mime-db": "^1.47.0",
+    "pg": "^8.6.0",
+    "sha.js": "^2.4.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "server",
+    "myhome-server"
+  ],
+  "author": "Sandor Szabo",
+  "license": "ISC"
+}

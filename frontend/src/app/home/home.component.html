@@ -1,0 +1,46 @@
+<body (window:resize)="checkDevice()">
+<app-menu (isSessionEvent)="getSessionData($event)"></app-menu>
+<div class="home">
+  <div class="add-link">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off" class="link-input" results="5" placeholder="URL of your favourite website" id="Search"
+     #url [disabled]="!isLoggedIn">
+    <button class="btn btn-add" (click)="validateInput(url.value)" [disabled]="!isLoggedIn">Add</button>
+  </div>
+  <div class="warning" *ngIf="isLoggedIn !== true">Please login/register to add links</div>
+  <h3>Favourite sites:</h3>
+  <div class="link-list">
+    <div>
+      <div class="links" *ngFor="let link of linklist">
+        <div class="link" title="open this page: {{link}}">
+          <button class="btn btn-link" (click)="openPage(link)">{{link}}</button>
+        </div>
+        <div>
+          <a href class="btn-x" title="Delete link: {{link}}" (click)="deleteLink(link)">
+            <span class="material-icons" style="width: 0.9em">close</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="button-container" *ngIf="linkCounter > 0">
+    <div class="navigation" *ngIf="linkCounter > 1 && !isMobileView">
+      <button class="btn btn-prev" title="step to previous page" (click)="prevPage()">&lt;</button>
+    </div>
+    <div class="close-page" *ngIf="linkCounter > 0">
+      <button class="btn btn-close" title="Close the current page: {{currentPage}}" (click)="closePage()">&times;</button>
+    </div>
+    <div class="navigation" *ngIf="linkCounter > 1 && !isMobileView">
+      <button class="btn btn-next" title="step to next page"  (click)="nextPage()">&gt;</button>
+    </div>
+  </div>
+  <div id="frames" class="frames-container">
+
+  </div>
+</div>
+<!--<footer>All rights reserved © Thot-Soft 2002 Kft. 2021</footer>-->
+</body>
+
+
+
+
